@@ -1,0 +1,20 @@
+/* clock.css */
+
+body {
+   font-family: "Helvetica";
+   background-color: #0071ce;
+   color: white;
+}
+
+h1 {
+   font-size: 4em;
+}
+
+.container {
+   text-align: center;
+   margin: 0px auto;
+}
+
+#current_time {
+   font-size: 5em;
+}
