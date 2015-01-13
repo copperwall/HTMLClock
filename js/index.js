@@ -1,5 +1,3 @@
-var id = 'current_time';
-var element = document.getElementById(id);
 // Weather API Key
 var key = '5ed5655b09100ec7ed50fd35e66610f9';
 
@@ -7,8 +5,8 @@ var key = '5ed5655b09100ec7ed50fd35e66610f9';
  * Get time, add to element, call self in a setTimeout
  */
 function getTime() {
-   var time = (new Date()).toLocaleTimeString(undefined, {hour12: false});
-   element.innerHTML = time;
+   var time = (new Date()).toLocaleTimeString();
+   $('#current_time').html(time);
 
    setTimeout(getTime, 1000);
 }
@@ -56,6 +54,10 @@ function getCoordinates() {
       getTemp(coordinates);
       $('#geolocation').show();
       $('#coords').html(coordinates.join(', '));
+   },
+   function(error) {
+      $('#geolocation').html(error.message + ' :(');
+      $('#geolocation').show();
    });
 }
 

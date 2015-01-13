@@ -2,7 +2,6 @@
 
 body {
    font-family: "Helvetica";
-   /* background-color: #0071ce; */
    color: white;
 }
 
@@ -26,6 +25,7 @@ h1 {
 
 #geolocation {
    display: none;
+   margin-top: 10px;
 }
 
 /* Weather colors */
