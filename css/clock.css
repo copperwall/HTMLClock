@@ -2,7 +2,7 @@
 
 body {
    font-family: "Helvetica";
-   background-color: #0071ce;
+   /* background-color: #0071ce; */
    color: white;
 }
 
@@ -12,9 +12,40 @@ h1 {
 
 .container {
    text-align: center;
-   margin: 0px auto;
+   margin: 20px auto;
 }
 
 #current_time {
    font-size: 5em;
+}
+
+#forecastLabel {
+   font-size: 2em;
+   margin-bottom: 50px;
+}
+
+#geolocation {
+   display: none;
+}
+
+/* Weather colors */
+
+body.cold {
+   background-color: #95A5A6;
+}
+
+body.chilly {
+   background-color: #1ABC9C;
+}
+
+body.nice {
+   background-color: #2980B9;
+}
+
+body.warm {
+   background-color: #E67E22;
+}
+
+body.hot {
+   background-color: #E74C3C;
 }
