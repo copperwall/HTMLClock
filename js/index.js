@@ -1,5 +1,6 @@
 // Weather API Key
-var key = '5ed5655b09100ec7ed50fd35e66610f9';
+var weatherKey = '5ed5655b09100ec7ed50fd35e66610f9';
+var geoKey = 'e57353dc23074f0eb30c484ee21f3d47';
 
 /**
  * Get time, add to element, call self in a setTimeout
@@ -17,7 +18,7 @@ function getTime() {
  */
 function getTemp(coordinates) {
    var location = coordinates ? coordinates.join(',') : '35.300399,-120.662362';
-   var url = 'https://api.forecast.io/forecast/' + key + '/' + location + '?callback=?';
+   var url = 'https://api.forecast.io/forecast/' + weatherKey + '/' + location + '?callback=?';
    var day = (new Date()).getDay();
 
    // Grab weather data and update page when done.
@@ -52,12 +53,24 @@ function getCoordinates() {
       var coordinates = [position.coords.latitude, position.coords.longitude];
 
       getTemp(coordinates);
+      reverseGeocode(coordinates);
       $('#geolocation').show();
       $('#coords').html(coordinates.join(', '));
    },
    function(error) {
       $('#geolocation').html(error.message + ' :(');
       $('#geolocation').show();
+   });
+}
+
+function reverseGeocode(coordinates) {
+   var url = "http://geoservices.tamu.edu/Services/ReverseGeocoding/WebService/v04_01/Rest/";
+   var lat = coordinates[0];
+   var long= coordinates[1];
+   url += '?apiKey=' + geoKey + '&version=4.01&lat=' + lat + '&lon=' + long + '&format=json';
+
+   $.getJSON(url).done(function(data) {
+      $('#city').html(data["StreetAddresses"][0]["City"]);
    });
 }
 
