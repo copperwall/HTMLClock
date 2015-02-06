@@ -74,6 +74,97 @@ function reverseGeocode(coordinates) {
    });
 }
 
+// Alarm functions 
+
+function showAlarmPopup() {
+   $('#mask, #popup').removeClass('hide');
+}
+
+function hideAlarmPopup() {
+   $('#mask, #popup').addClass('hide');
+}
+
+function insertAlarm(hours, mins, ampm, alarmName) {
+   var wat = $('<div>').addClass('flexable');
+   wat.append('<div class="name">' + alarmName + '</div>');
+   wat.append('<div class="time">' + hours + ':' + mins + ' ' + ampm + '</div>');
+   wat.append('<button style="float: right;" name="' + alarmName + '" class="delete">Delete</button>');
+   $('#alarms').append(wat);
+
+   wat.click(function(elem) {
+      // Visually remove alarm
+      // Remove from parse
+      deleteAlarm(alarmName);
+   });
+}
+
+function addAlarm() {
+   var hours, mins, ampm, alarmName;
+
+   var params = ['hours', 'mins', 'ampm'].map(function(selector) {
+      return $('#' + selector + ' option:selected').text();
+   });
+
+   params.push($('#alarmName').val());
+
+   var AlarmObject = Parse.Object.extend("Alarm");
+   var alarmObject = new AlarmObject();
+
+   alarmObject.save({"hours": params[0], "mins": params[1], "ampm": params[2], "alarmName": params[3]}, {
+      success: function(object) {
+         insertAlarm.apply(this, params);
+         hideAlarmPopup();
+      }
+   });
+}
+
+function deleteAlarm(alarmName) {
+   $('button[name="' + alarmName + '"]').parent().remove();
+
+   // Now Parse
+   var AlarmObject = Parse.Object.extend("Alarm");
+   var query = new Parse.Query(AlarmObject);
+   query.find({
+     success: function(results) {
+        results.filter(function(result) {
+            return result.get('alarmName') === alarmName;
+         }).forEach(function(result) {
+            result.destroy();
+         });
+    }
+   });
+}
+
+function populateSelectors() {
+   for (var i = 1; i <= 12; i++) {
+      if (i < 10)
+         i = '0' + i;
+      $('#hours').append('<option>' + i + '</option>');
+   }
+
+   for (var i = 0; i <= 60; i++) {
+      if (i < 10)
+         i = '0' + i;
+      $('#mins').append('<option>' + i + '</option>');
+   }
+}
+
+function getAllAlarms() {
+   Parse.initialize("FwU0sa1EGfhSB9X0mSCO6gxxLkGp79X4XmHafYyd", "k3eDx06lCtPuNPLG5sE3NupDXUAf2X8iY5IZMvmp");
+
+   var AlarmObject = Parse.Object.extend("Alarm");
+   var query = new Parse.Query(AlarmObject);
+   query.find({
+     success: function(results) {
+       for (var i = 0; i < results.length; i++) { 
+         insertAlarm(results[i].get("hours"), results[i].get("mins"), results[i].get("ampm"), results[i].get("alarmName"));
+       }
+    }
+   });
+}
+
+populateSelectors();
 getTime();
 getCoordinates();
 getTemp();
+getAllAlarms();

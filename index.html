@@ -3,27 +3,57 @@
    <head>
       <title>Clock</title>
       <link href='css/clock.css' rel='stylesheet' type='text/css'>
+      <link href='css/alarm.css' rel='stylesheet' type='text/css'>
       <meta charset='utf-8'>
    </head>
    <body>
       <div class='container'>
          <h1>TIME RIGHT MEOW</h1>
-         <h2 id='current_time'></h3>
+         <h2 id='current_time'></h2>
          <div id='weather'>
             <div id='forecastLabel'>
             </div>
-            <img id='forecastIcon'>
-            </img>
+            <img id='forecastIcon' alt='forecast'>
          </div>
          <div id='geolocation'>
             <h4>Your current coordinates are:</h4>
             <p id='coords'></p>
             <p id='city'></p>
          </div>
-         <h3>No Alarms Set</h3>
+         <div id='alarmContainer'>
+            <div id='alarmHeader' class='flexible'>
+               <h2>Alarms</h2>
+               <input type='button' value='Add Alarm' class='button' onclick='showAlarmPopup()'>
+            </div>
+            <div id='alarms'></div>
+         </div>
+         <div id='mask' class='hide'>
+         </div>
+         <div id='popup' class='hide'>
+            <h1>Add Alarm</h1>
+            <div id='timeContainer'>
+               <select id='hours'>
+                  <!-- Populated by JS -->
+               </select>
+               <select id='mins'>
+                  <!-- Populated by JS -->
+               </select>
+               <select id='ampm'>
+                  <option>am</option>
+                  <option>pm</option>
+               </select>
+            </div>
+            <input type='text' id='alarmName' placeholder='Alarm Name'>
+            <div class='flexable'>
+               <input type='button' class='button' value='Cancel' onclick='hideAlarmPopup()'>
+               <input type='button' class='button' value='Save Alarm'
+               onclick='addAlarm()'>
+            </div>
+         </div>
       </div>
 
       <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+      <script src="https://www.parsecdn.com/js/parse-1.3.4.min.js"></script>
       <script src='js/index.js'></script>
    </body>
 </html>
