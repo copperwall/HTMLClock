@@ -126,14 +126,12 @@ function deleteAlarm(alarmName) {
    // Now Parse
    var AlarmObject = Parse.Object.extend("Alarm");
    var query = new Parse.Query(AlarmObject);
-   query.find({
-     success: function(results) {
-        results.filter(function(result) {
-            return result.get('alarmName') === alarmName && result.get('username') === username;
-         }).forEach(function(result) {
-            result.destroy();
-         });
-    }
+   query.equalTo('username', username);
+   query.equalTo('alarmName', alarmName);
+   query.first({
+      success: function(result) {
+         result.destroy();
+      }
    });
 }
 
@@ -157,14 +155,13 @@ function getAllAlarms(username) {
    var username = getUserName();
    var AlarmObject = Parse.Object.extend("Alarm");
    var query = new Parse.Query(AlarmObject);
+   query.equalTo('username', username);
    query.find({
      success: function(results) {
-       for (var i = 0; i < results.length; i++) { 
-         if (results[i].get("username") === username) {
-            insertAlarm(results[i].get("hours"), results[i].get("mins"), results[i].get("ampm"), results[i].get("alarmName"));
-         }
-       }
-    }
+         results.forEach(function(result) {
+            insertAlarm(result.get("hours"), result.get("mins"), result.get("ampm"), result.get("alarmName"));
+         });
+      }
    });
 }
 
