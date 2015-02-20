@@ -167,4 +167,3 @@ populateSelectors();
 getTime();
 getCoordinates();
 getTemp();
-getAllAlarms();

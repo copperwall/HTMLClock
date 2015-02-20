@@ -4,6 +4,41 @@
       <title>Clock</title>
       <link href='css/clock.css' rel='stylesheet' type='text/css'>
       <link href='css/alarm.css' rel='stylesheet' type='text/css'>
+      <!-- <meta name="google-signin-callback" content="signinCallback" /> -->
+
+      <script src="https://apis.google.com/js/client:platform.js" async defer></script>
+      <script>
+         var getUserName;
+         function afterSignin(authResult) {
+           if (authResult['status']['signed_in']) {
+             // Update the app to reflect a signed in user
+             // Hide the sign-in button now that the user is authorized, for example:
+             // Show add alarm, add id key to data stuff
+             userid = authResult.id_token;
+             $('#add_button').removeClass('hide');
+             document.getElementById('signinButton').setAttribute('style', 'display: none');
+             gapi.client.load('plus','v1', function() {
+               var request = gapi.client.plus.people.get({
+                  'userId': 'me'
+               });
+               request.execute(function(resp) {
+                  // Closure to keep the response object immutable
+                  getUserName = function() {
+                     return resp.displayName;
+                  };
+                  getAllAlarms();
+               });
+             });
+           } else {
+             // Update the app to reflect a signed out user
+             // Possible error values:
+             //   "user_signed_out" - User is signed-out
+             //   "access_denied" - User denied access to your app
+             //   "immediate_failed" - Could not automatically log in the user
+             console.log('Sign-in state: ' + authResult['error']);
+           }
+         }
+      </script>
       <meta charset='utf-8'>
    </head>
    <body>
@@ -23,8 +58,20 @@
          <div id='alarmContainer'>
             <div id='alarmHeader' class='flexible'>
                <h2>Alarms</h2>
-               <input type='button' value='Add Alarm' class='button' onclick='showAlarmPopup()'>
+               <input id='add_button' type='button' value='Add Alarm' class='button hide' onclick='showAlarmPopup()'>
             </div>
+
+         <span id="signinButton">
+           <span
+             class="g-signin"
+             data-callback="afterSignin"
+             data-clientid="3917858329-a50t47tmlsacjrvcv5rposf2q46jm43d.apps.googleusercontent.com"
+             data-cookiepolicy="single_host_origin"
+             data-requestvisibleactions="http://schema.org/AddAction"
+             data-scope="https://www.googleapis.com/auth/plus.profile.emails.read">
+           </span>
+         </span>
+
             <div id='alarms'></div>
          </div>
          <div id='mask' class='hide'>
