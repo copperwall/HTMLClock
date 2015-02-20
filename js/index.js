@@ -100,6 +100,7 @@ function insertAlarm(hours, mins, ampm, alarmName) {
 
 function addAlarm() {
    var hours, mins, ampm, alarmName;
+   var username = getUserName();
 
    var params = ['hours', 'mins', 'ampm'].map(function(selector) {
       return $('#' + selector + ' option:selected').text();
@@ -110,7 +111,7 @@ function addAlarm() {
    var AlarmObject = Parse.Object.extend("Alarm");
    var alarmObject = new AlarmObject();
 
-   alarmObject.save({"hours": params[0], "mins": params[1], "ampm": params[2], "alarmName": params[3]}, {
+   alarmObject.save({"username": username, "hours": params[0], "mins": params[1], "ampm": params[2], "alarmName": params[3]}, {
       success: function(object) {
          insertAlarm.apply(this, params);
          hideAlarmPopup();
@@ -120,6 +121,7 @@ function addAlarm() {
 
 function deleteAlarm(alarmName) {
    $('button[name="' + alarmName + '"]').parent().remove();
+   var username = getUserName();
 
    // Now Parse
    var AlarmObject = Parse.Object.extend("Alarm");
@@ -127,7 +129,7 @@ function deleteAlarm(alarmName) {
    query.find({
      success: function(results) {
         results.filter(function(result) {
-            return result.get('alarmName') === alarmName;
+            return result.get('alarmName') === alarmName && result.get('username') === username;
          }).forEach(function(result) {
             result.destroy();
          });
@@ -149,15 +151,18 @@ function populateSelectors() {
    }
 }
 
-function getAllAlarms() {
+function getAllAlarms(username) {
    Parse.initialize("FwU0sa1EGfhSB9X0mSCO6gxxLkGp79X4XmHafYyd", "k3eDx06lCtPuNPLG5sE3NupDXUAf2X8iY5IZMvmp");
 
+   var username = getUserName();
    var AlarmObject = Parse.Object.extend("Alarm");
    var query = new Parse.Query(AlarmObject);
    query.find({
      success: function(results) {
        for (var i = 0; i < results.length; i++) { 
-         insertAlarm(results[i].get("hours"), results[i].get("mins"), results[i].get("ampm"), results[i].get("alarmName"));
+         if (results[i].get("username") === username) {
+            insertAlarm(results[i].get("hours"), results[i].get("mins"), results[i].get("ampm"), results[i].get("alarmName"));
+         }
        }
     }
    });

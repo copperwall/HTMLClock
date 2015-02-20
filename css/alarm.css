@@ -3,7 +3,7 @@ h2 {
 	margin-top:0px;
 }
 .hide {
-	display:none;
+	display:none !important;
 }
 .button {
 	display:block;
