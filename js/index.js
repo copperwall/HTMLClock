@@ -120,7 +120,7 @@ function addAlarm() {
 }
 
 function deleteAlarm(alarmName) {
-   $('button[name="' + alarmName + '"]').parent().remove();
+   $('button[name="' + alarmName + '"]').first().parent().remove();
    var username = getUserName();
 
    // Now Parse
